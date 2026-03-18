@@ -1,0 +1,3417 @@
+/* ── Sidekick Plugin — Copilot-style design ────────────────────────── */
+
+/* Override Obsidian's default view-content padding for our sidebar */
+.workspace-leaf-content[data-type="sidekick-view"] .view-content {
+    padding: 0;
+}
+
+/* Reset: override Obsidian theme button defaults inside our container */
+.sidekick-container button,
+.sidekick-container .sidekick-ctrl-btn,
+.sidekick-container .sidekick-tool-btn,
+.sidekick-container .sidekick-submit-btn,
+.sidekick-container .sidekick-stop-btn,
+.sidekick-container .sidekick-conv-btn,
+.sidekick-container .sidekick-mp-close,
+.sidekick-container .sidekick-mp-tab,
+.sidekick-container .sidekick-mp-filter-btn,
+.sidekick-container .sidekick-msg-action-btn {
+    background: transparent;
+    border: none;
+    box-shadow: none;
+}
+
+.sidekick-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    font-family: var(--font-interface);
+    position: relative;
+}
+
+/* ── Controls bar (above input) ─────────────────────────────────── */
+
+.sidekick-controls {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 2px 8px;
+    flex-shrink: 0;
+}
+
+.sidekick-controls-spacer {
+    flex: 1;
+}
+
+.sidekick-controls-title {
+    flex: 1;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--text-normal);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    min-width: 0;
+    cursor: default;
+}
+
+.sidekick-inline-rename {
+    width: 100%;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--text-normal);
+    background: var(--background-secondary);
+    border: 1px solid var(--interactive-accent);
+    border-radius: 3px;
+    padding: 1px 4px;
+    outline: none;
+    font-family: var(--font-interface);
+}
+
+.sidekick-controls-actions {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+}
+
+.sidekick-ctrl-btn,
+.sidekick-tool-btn {
+    background: none;
+    border: none;
+    padding: 4px;
+    border-radius: 4px;
+    cursor: pointer;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s;
+    width: 24px;
+    height: 24px;
+}
+
+.sidekick-ctrl-btn svg {
+    width: 16px;
+    height: 16px;
+}
+
+.sidekick-ctrl-btn:hover {
+    background: var(--background-modifier-hover);
+    color: var(--text-normal);
+}
+
+/* ── Callout styling overrides (inside sidekick messages) ──────────── */
+
+/*
+ * VS Code Copilot-inspired design:
+ * - Collapsed: single-line, minimal, inline-text feel
+ * - Expanded: subtle card with readable code content
+ * - No colored text, no loud backgrounds
+ * - Monochromatic icons, muted typography
+ */
+
+/* Base callout — clearly distinct card above the chat background */
+.sidekick-message .callout {
+    margin: 8px 0;
+    padding: 0;
+    border-radius: 6px;
+    background: var(--background-secondary);
+    border: 1px solid var(--background-modifier-border);
+    border-left-width: 3px;
+    mix-blend-mode: normal;
+}
+
+/* Title bar — single-line, compact, muted */
+.sidekick-message .callout .callout-title {
+    padding: 2px 8px;
+    gap: 5px;
+    font-size: 0.84em;
+    font-weight: 500;
+    color: var(--text-muted);
+    background: transparent !important;
+}
+
+/* Icons — monochromatic, small */
+.sidekick-message .callout .callout-title .callout-icon {
+    color: var(--text-faint);
+    opacity: 0.65;
+    width: 14px;
+    height: 14px;
+}
+
+/* Title text — neutral, truncated for clean one-liners */
+.sidekick-message .callout .callout-title-inner {
+    font-weight: 500;
+    color: var(--text-muted);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* Content area — visible only when expanded */
+.sidekick-message .callout .callout-content {
+    padding: 4px 10px 6px;
+    font-size: 0.85em;
+    color: var(--text-normal);
+}
+
+/* Code blocks inside callouts — compact, max-height scroll */
+.sidekick-message .callout .callout-content pre {
+    margin: 2px 0;
+    padding: 5px 7px;
+    font-size: 0.88em;
+    max-height: 150px;
+    overflow-y: auto;
+    border-radius: 4px;
+    background: var(--code-background);
+}
+
+/* Clickable file paths in tool callout titles */
+.sidekick-tool-file-link {
+    color: var(--text-accent);
+    text-decoration: none;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.sidekick-tool-file-link:hover {
+    text-decoration: underline;
+    color: var(--text-accent-hover, var(--text-accent));
+}
+
+/* "diff" button in Edit callout titles */
+.sidekick-diff-btn {
+    color: var(--text-faint);
+    font-size: 0.85em;
+    font-weight: 400;
+    cursor: pointer;
+    margin-left: 4px;
+    opacity: 0.7;
+}
+
+.sidekick-diff-btn:hover {
+    color: var(--text-accent);
+    opacity: 1;
+    text-decoration: underline;
+}
+
+/* ── Diff Modal ────────────────────────────────────────────────────── */
+
+.sidekick-diff-modal {
+    width: 90vw;
+    max-width: 1200px;
+    height: 80vh;
+}
+
+.sidekick-diff-content {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.sidekick-diff-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--background-modifier-border);
+    font-size: 13px;
+    flex-shrink: 0;
+}
+
+.sidekick-diff-path {
+    font-weight: 600;
+    color: var(--text-normal);
+}
+
+.sidekick-diff-label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 2px 8px;
+    border-radius: 4px;
+}
+
+.sidekick-diff-label-before {
+    color: var(--text-error);
+    background: color-mix(in srgb, var(--text-error) 10%, transparent);
+}
+
+.sidekick-diff-label-after {
+    color: var(--text-success, var(--interactive-success));
+    background: color-mix(in srgb, var(--text-success, var(--interactive-success)) 10%, transparent);
+}
+
+.sidekick-diff-container {
+    flex: 1;
+    overflow: auto;
+    min-height: 0;
+}
+
+/* MergeView styling overrides */
+.sidekick-diff-container .cm-mergeView {
+    height: 100%;
+}
+
+.sidekick-diff-container .cm-editor {
+    font-size: 13px;
+}
+
+.sidekick-diff-container .cm-changedLine {
+    background: color-mix(in srgb, var(--text-accent) 5%, transparent);
+}
+
+.sidekick-diff-container .cm-deletedChunk {
+    background: color-mix(in srgb, var(--text-error) 10%, transparent);
+}
+
+.sidekick-diff-container .cm-insertedLine {
+    background: color-mix(in srgb, var(--text-success, var(--interactive-success)) 10%, transparent);
+}
+
+/* ── Error Banner ──────────────────────────────────────────────────── */
+
+.sidekick-error-banner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 8px 12px;
+    background: color-mix(in srgb, var(--text-error) 10%, transparent);
+    color: var(--text-error);
+    font-size: 13px;
+    flex-shrink: 0;
+    border-top: 1px solid color-mix(in srgb, var(--text-error) 20%, transparent);
+    border-bottom: 1px solid color-mix(in srgb, var(--text-error) 20%, transparent);
+}
+
+.sidekick-error-msg {
+    flex: 1;
+    min-width: 0;
+    line-height: 1.4;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+.sidekick-error-hint {
+    color: var(--text-faint);
+    font-size: 0.85em;
+    font-style: italic;
+}
+
+/* Confirmation banner */
+.sidekick-confirm-banner {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    margin: 4px 8px;
+    background: var(--background-modifier-error);
+    border-radius: 6px;
+    font-size: 0.85em;
+    animation: sidekick-slide-up 0.15s ease-out;
+}
+.sidekick-confirm-yes {
+    padding: 2px 10px;
+    border-radius: 4px;
+    border: 1px solid var(--text-error);
+    color: var(--text-error);
+    background: transparent;
+    cursor: pointer;
+    font-weight: 600;
+}
+.sidekick-confirm-yes:hover {
+    background: var(--text-error);
+    color: var(--text-on-accent);
+}
+.sidekick-confirm-no {
+    padding: 2px 10px;
+    border-radius: 4px;
+    border: 1px solid var(--text-muted);
+    color: var(--text-muted);
+    background: transparent;
+    cursor: pointer;
+}
+.sidekick-confirm-no:hover {
+    background: var(--background-modifier-hover);
+}
+
+/* ── Conversation List ─────────────────────────────────────────────── */
+
+.sidekick-conversation-list {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    background: var(--background-primary);
+    display: flex;
+    flex-direction: column;
+}
+
+/* Toolbar: search + controls */
+.sidekick-convlist-toolbar {
+    padding: 8px 10px 6px;
+    border-top: 1px solid var(--background-modifier-border);
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    flex-shrink: 0;
+    position: sticky;
+    bottom: 0;
+    background: var(--background-primary);
+    z-index: 10;
+}
+
+.sidekick-convlist-search {
+    width: 100%;
+    padding: 6px 10px;
+    border: 1px solid var(--background-modifier-border);
+    border-radius: 6px;
+    background: var(--background-primary-alt);
+    color: var(--text-normal);
+    font-size: var(--font-ui-small);
+    outline: none;
+}
+
+.sidekick-convlist-search:focus {
+    border-color: var(--interactive-accent);
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--interactive-accent) 20%, transparent);
+}
+
+.sidekick-convlist-controls {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.sidekick-convlist-label {
+    font-size: 10px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.sidekick-convlist-select {
+    padding: 2px 4px;
+    border: 1px solid var(--background-modifier-border);
+    border-radius: 4px;
+    background: var(--background-primary-alt);
+    color: var(--text-normal);
+    font-size: 11px;
+    cursor: pointer;
+}
+
+.sidekick-convlist-dir-btn {
+    background: none;
+    border: 1px solid var(--background-modifier-border);
+    border-radius: 4px;
+    padding: 2px 4px;
+    cursor: pointer;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+}
+
+.sidekick-convlist-dir-btn:hover {
+    color: var(--text-normal);
+    background: var(--background-modifier-hover);
+}
+
+.sidekick-convlist-dir-btn svg {
+    width: 14px;
+    height: 14px;
+}
+
+.sidekick-convlist-count {
+    margin-left: auto;
+    font-size: 10px;
+    color: var(--text-faint);
+    white-space: nowrap;
+}
+
+.sidekick-convlist-empty {
+    padding: 32px 16px;
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+}
+
+.sidekick-convlist-empty-icon {
+    font-size: 2rem;
+    margin-bottom: 4px;
+}
+
+.sidekick-convlist-empty-title {
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: var(--text-normal);
+}
+
+.sidekick-convlist-empty-hint {
+    font-size: 0.75rem;
+    color: var(--text-faint);
+}
+
+/* Scrollable item container */
+.sidekick-convlist-items {
+    flex: none;
+}
+
+/* Conversation items — enhanced with preview and badges */
+.sidekick-conv-item {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: 8px 10px;
+    cursor: pointer;
+    border-bottom: 1px solid var(--background-modifier-border-hover);
+    transition: background 0.1s;
+    gap: 4px;
+    position: relative;
+}
+
+.sidekick-conv-item:hover {
+    background: var(--background-modifier-hover);
+}
+
+.sidekick-conv-active {
+    background: var(--background-modifier-active-hover);
+    border-left: 3px solid var(--interactive-accent);
+}
+
+.sidekick-conv-info {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    flex: 1;
+    min-width: 0;
+}
+
+.sidekick-conv-title-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    min-width: 0;
+}
+
+.sidekick-conv-title {
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex: 1;
+    min-width: 0;
+}
+
+.sidekick-model-picker-provider-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 14px;
+    height: 14px;
+    margin-right: 6px;
+    color: var(--text-muted);
+}
+
+.sidekick-model-picker-provider-icon svg {
+    width: 100%;
+    height: 100%;
+}
+
+/* Model & provider badges */
+.sidekick-conv-badges {
+    display: flex;
+    gap: 4px;
+    flex-shrink: 0;
+}
+
+.sidekick-conv-badge {
+    font-size: 9px;
+    padding: 1px 5px;
+    border-radius: 3px;
+    white-space: nowrap;
+    line-height: 1.4;
+}
+
+.sidekick-conv-badge-model {
+    background: color-mix(in srgb, var(--interactive-accent) 15%, transparent);
+    color: var(--interactive-accent);
+}
+
+.sidekick-conv-badge-provider {
+    background: color-mix(in srgb, var(--text-muted) 12%, transparent);
+    color: var(--text-muted);
+}
+
+/* Preview snippet */
+.sidekick-conv-preview {
+    font-size: 11px;
+    color: var(--text-muted);
+    line-height: 1.3;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+
+.sidekick-conv-meta {
+    font-size: 10px;
+    color: var(--text-faint);
+}
+
+.sidekick-conv-meta-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+}
+
+.sidekick-conv-ago {
+    font-size: 10px;
+    color: var(--text-faint);
+    white-space: nowrap;
+    font-style: italic;
+}
+
+.sidekick-conv-actions {
+    display: flex;
+    gap: 2px;
+    opacity: 0;
+    transition: opacity 0.15s;
+    position: absolute;
+    right: 8px;
+    top: 8px;
+    background: var(--background-primary);
+    padding: 2px;
+    border-radius: 4px;
+    box-shadow: var(--shadow-s);
+    z-index: 2;
+}
+
+.sidekick-conv-item:hover .sidekick-conv-actions {
+    opacity: 1;
+}
+
+.sidekick-conv-active .sidekick-conv-actions {
+    background: var(--background-modifier-active-hover);
+}
+
+.sidekick-conv-btn {
+    background: none;
+    border: none;
+    padding: 2px;
+    border-radius: 3px;
+    cursor: pointer;
+    color: var(--text-muted);
+    display: flex;
+}
+
+.sidekick-conv-btn:hover {
+    background: var(--background-modifier-hover);
+    color: var(--text-normal);
+}
+
+.sidekick-conv-btn-danger:hover {
+    color: var(--text-error);
+}
+
+.sidekick-conv-rename-input {
+    font-size: inherit;
+    font-family: inherit;
+    background: var(--background-modifier-form-field);
+    color: var(--text-normal);
+    border: 1px solid var(--interactive-accent);
+    border-radius: 3px;
+    padding: 1px 4px;
+    width: 100%;
+    outline: none;
+}
+
+/* Section headers & show-more */
+.sidekick-conv-section-header {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+    padding: 8px 10px 2px;
+    position: sticky;
+    top: 0;
+    background: var(--background-primary);
+    z-index: 1;
+}
+
+.sidekick-conv-show-more {
+    display: block;
+    width: 100%;
+    background: none;
+    border: none;
+    padding: 4px 12px;
+    font-size: 11px;
+    color: var(--text-accent);
+    cursor: pointer;
+    text-align: left;
+}
+
+.sidekick-conv-show-more:hover {
+    background: var(--background-modifier-hover);
+    text-decoration: underline;
+}
+
+/* ── Tool Approval ─────────────────────────────────────────────────── */
+
+.sidekick-approval {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 12px;
+    gap: 8px;
+    background: transparent;
+    border-top: 2px solid var(--interactive-accent);
+    flex-shrink: 0;
+}
+
+.sidekick-approval-info {
+    font-size: 12px;
+    flex: 1;
+    min-width: 0;
+}
+
+.sidekick-approval-args {
+    color: var(--text-muted);
+    font-size: 11px;
+}
+
+.sidekick-approval-btns {
+    display: flex;
+    gap: 6px;
+    flex-shrink: 0;
+}
+
+.sidekick-approve-btn {
+    padding: 4px 12px;
+    font-size: 12px;
+    border-radius: 6px;
+    border: none;
+    background: var(--interactive-accent);
+    color: var(--text-on-accent);
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.sidekick-approve-btn:hover {
+    filter: brightness(1.1);
+}
+
+.sidekick-decline-btn {
+    padding: 4px 12px;
+    font-size: 12px;
+    border-radius: 6px;
+    border: 1px solid var(--background-modifier-border);
+    background: transparent;
+    color: var(--text-muted);
+    cursor: pointer;
+}
+
+.sidekick-decline-btn:hover {
+    color: var(--text-error);
+    border-color: var(--text-error);
+}
+
+/* ── Iterate Feedback ─────────────────────────────────────────────── */
+
+/* Iterate feedback banner — shown above the main input */
+.sidekick-iterate-banner {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 10px;
+    border-bottom: 1px solid var(--interactive-accent);
+    background: color-mix(in srgb, var(--interactive-accent) 8%, transparent);
+    animation: sidekick-fade-in 0.2s ease-out;
+}
+
+.sidekick-iterate-banner-text {
+    flex: 1;
+    font-size: 13px;
+    line-height: 1.4;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.sidekick-iterate-title {
+    font-weight: 600;
+    color: var(--interactive-accent);
+}
+
+.sidekick-iterate-hint {
+    color: var(--text-normal);
+    font-size: 13px;
+    max-height: 120px;
+    overflow-y: auto;
+    transition: max-height 0.2s ease;
+}
+
+.sidekick-iterate-hint.expanded {
+    max-height: none;
+    overflow-y: visible;
+}
+
+.sidekick-iterate-hint p:first-child {
+    margin-top: 0;
+}
+
+.sidekick-iterate-hint p:last-child {
+    margin-bottom: 0;
+}
+
+.sidekick-iterate-done-btn {
+    padding: 3px 10px;
+    font-size: 11px;
+    border-radius: 6px;
+    border: 1px solid var(--background-modifier-border);
+    background: transparent;
+    color: var(--text-muted);
+    cursor: pointer;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.sidekick-iterate-done-btn:hover {
+    color: var(--text-normal);
+    border-color: var(--text-normal);
+}
+
+.sidekick-iterate-expand-btn {
+    padding: 2px 6px;
+    font-size: 10px;
+    border-radius: 4px;
+    border: 1px solid var(--background-modifier-border);
+    background: transparent;
+    color: var(--text-muted);
+    cursor: pointer;
+    white-space: nowrap;
+    flex-shrink: 0;
+    align-self: flex-start;
+}
+
+.sidekick-iterate-expand-btn:hover {
+    color: var(--text-normal);
+    border-color: var(--text-normal);
+}
+
+/* Choice buttons for ask_user_choice */
+.sidekick-choice-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    width: 100%;
+}
+
+.sidekick-choice-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 6px 0 4px;
+    width: 100%;
+}
+
+.sidekick-choice-btn {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    width: 100%;
+    padding: 8px 12px;
+    font-size: 13px;
+    line-height: 1.4;
+    border-radius: 8px;
+    border: 1px solid var(--background-modifier-border);
+    background: var(--background-primary);
+    color: var(--text-normal);
+    cursor: pointer;
+    text-align: left;
+    word-break: break-word;
+    transition: background 0.15s, border-color 0.15s, box-shadow 0.15s;
+}
+
+.sidekick-choice-btn:hover {
+    background: color-mix(in srgb, var(--interactive-accent) 12%, transparent);
+    border-color: var(--interactive-accent);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.sidekick-choice-btn:focus-visible {
+    outline: 2px solid var(--interactive-accent);
+    outline-offset: -1px;
+}
+
+.sidekick-choice-btn .sidekick-choice-number {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--interactive-accent);
+    color: var(--text-on-accent);
+    font-size: 11px;
+    font-weight: 600;
+    line-height: 1;
+}
+
+.sidekick-choice-btn .sidekick-choice-text {
+    flex: 1;
+    min-width: 0;
+}
+
+/* Iterate resume banner */
+.sidekick-iterate-resume-banner {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 10px;
+    border-bottom: 1px solid var(--text-warning);
+    background: color-mix(in srgb, var(--text-warning) 8%, transparent);
+    animation: sidekick-fade-in 0.2s ease-out;
+}
+
+.sidekick-resume-btns {
+    display: flex;
+    gap: 4px;
+    flex-shrink: 0;
+}
+
+.sidekick-resume-btn {
+    padding: 3px 10px;
+    font-size: 11px;
+    border-radius: 6px;
+    border: none;
+    background: var(--interactive-accent);
+    color: var(--text-on-accent);
+    cursor: pointer;
+    font-weight: 600;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.sidekick-resume-btn:hover {
+    filter: brightness(1.1);
+}
+
+/* ── Messages ──────────────────────────────────────────────────────── */
+
+.sidekick-messages-wrapper {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+    min-height: 0;
+}
+
+.sidekick-messages {
+    height: 100%;
+    overflow-y: auto;
+    scroll-behavior: smooth;
+    padding: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    word-break: break-word;
+    user-select: text;
+    font-size: var(--font-text-size);
+}
+.sidekick-messages.sidekick-generating {
+    border-left: 2px solid var(--interactive-accent);
+    animation: sidekick-generating-pulse 2s ease-in-out infinite;
+}
+@keyframes sidekick-generating-pulse {
+    0%, 100% { border-left-color: var(--interactive-accent); }
+    50% { border-left-color: transparent; }
+}
+
+/* Typing indicator (three bouncing dots) */
+.sidekick-typing-indicator {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 12px 16px;
+    opacity: 0.6;
+}
+.sidekick-typing-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--text-muted);
+    animation: sidekick-typing-bounce 1.4s ease-in-out infinite;
+}
+.sidekick-typing-dot:nth-child(2) { animation-delay: 0.2s; }
+.sidekick-typing-dot:nth-child(3) { animation-delay: 0.4s; }
+@keyframes sidekick-typing-bounce {
+    0%, 60%, 100% { transform: translateY(0); }
+    30% { transform: translateY(-6px); }
+}
+
+.sidekick-scroll-to-bottom {
+    position: absolute;
+    bottom: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    background: var(--background-primary);
+    border: 1px solid var(--background-modifier-border);
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    color: var(--text-muted);
+    transition: color 0.15s, box-shadow 0.15s;
+    animation: sidekick-bounce-in 0.3s ease-out;
+}
+
+@keyframes sidekick-bounce-in {
+    0% { opacity: 0; transform: translateX(-50%) translateY(10px); }
+    60% { transform: translateX(-50%) translateY(-2px); }
+    100% { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+.sidekick-scroll-to-bottom:hover {
+    color: var(--text-accent);
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
+}
+
+.sidekick-scroll-to-bottom svg {
+    width: 16px;
+    height: 16px;
+}
+
+.sidekick-empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    text-align: center;
+    color: var(--text-muted);
+    padding: 40px 20px;
+}
+
+.sidekick-empty-state p:first-child {
+    font-size: 18px;
+    margin-bottom: 8px;
+}
+
+.sidekick-empty-greeting {
+    font-size: 1.3rem;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+}
+
+.sidekick-empty-sub {
+    font-size: 12px;
+    color: var(--text-faint);
+}
+
+/* ── Starter prompt cards ────────────────────────────────────────── */
+
+.sidekick-starter-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-top: 16px;
+    width: 100%;
+    max-width: 360px;
+}
+
+.sidekick-starter-card {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 14px;
+    border-radius: 8px;
+    border: 1px solid var(--background-modifier-border);
+    background: var(--background-primary);
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s, box-shadow 0.15s;
+    text-align: left;
+}
+
+.sidekick-starter-card:hover {
+    background: color-mix(in srgb, var(--interactive-accent) 6%, var(--background-primary));
+    border-color: var(--interactive-accent);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+    transform: translateY(-1px);
+}
+
+.sidekick-starter-icon {
+    font-size: 16px;
+    flex-shrink: 0;
+}
+
+.sidekick-starter-text {
+    font-size: 0.8rem;
+    color: var(--text-normal);
+    line-height: 1.3;
+}
+
+/* ── Keyboard shortcut hints on empty state ──────────────────────── */
+.sidekick-shortcut-hints {
+    display: flex;
+    gap: 16px;
+    margin-top: 16px;
+    font-size: 0.7rem;
+    color: var(--text-faint);
+}
+
+.sidekick-shortcut-hints span {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.sidekick-shortcut-hints kbd {
+    display: inline-block;
+    padding: 1px 5px;
+    border: 1px solid var(--background-modifier-border);
+    border-radius: 3px;
+    background: var(--background-secondary);
+    font-size: 0.65rem;
+    font-family: inherit;
+    line-height: 1.4;
+}
+
+.sidekick-system-notice {
+    text-align: center;
+    font-size: 11px;
+    color: var(--text-muted);
+    padding: 4px 12px;
+    margin: 4px 0;
+}
+
+.sidekick-message {
+    margin: 0 8px;
+    border-radius: 6px;
+    padding: 8px;
+}
+
+.sidekick-message-user {
+    border: 1px solid var(--background-modifier-border);
+    background: var(--background-modifier-hover);
+    animation: sidekick-slide-up 0.25s ease-out;
+}
+
+.sidekick-message-assistant {
+    background: transparent;
+    border: 1px solid color-mix(in srgb, var(--background-modifier-border) 40%, transparent);
+    border-radius: 8px;
+    animation: sidekick-slide-up 0.25s ease-out;
+}
+
+@keyframes sidekick-slide-up {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes sidekick-fade-in {
+    from {
+        opacity: 0;
+        transform: translateY(4px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Smooth content transitions during streaming */
+.sidekick-message-content {
+    transition: opacity 0.15s ease;
+    font-size: inherit;
+    line-height: var(--line-height-normal);
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}
+
+.sidekick-message-user .sidekick-message-content {
+    font-size: var(--font-text-size);
+}
+
+.sidekick-message-user .sidekick-message-content.sidekick-editable {
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+    border-radius: 6px;
+}
+
+.sidekick-message-user .sidekick-message-content.sidekick-editable:hover {
+    background-color: color-mix(in srgb, var(--interactive-hover) 15%, transparent);
+}
+
+.sidekick-message-content p {
+    margin: 0;
+    margin-bottom: 0.4em;
+}
+
+/* Match Obsidian note heading styles */
+.sidekick-message-content h1 { font-size: var(--h1-size); }
+.sidekick-message-content h2 { font-size: var(--h2-size); }
+.sidekick-message-content h3 { font-size: var(--h3-size); }
+.sidekick-message-content h4 { font-size: var(--h4-size); }
+.sidekick-message-content h5 { font-size: var(--h5-size); }
+.sidekick-message-content h6 { font-size: var(--h6-size); }
+
+
+.sidekick-message-content p:last-child {
+    margin-bottom: 0;
+}
+
+.sidekick-message-content pre {
+    background: var(--background-primary-alt);
+    border-radius: 4px;
+    padding: 10px;
+    border: 1px solid var(--background-modifier-border);
+    overflow-x: auto;
+    position: relative;
+}
+
+.sidekick-message-content pre code {
+    background: transparent;
+    padding: 0;
+    line-height: 1.5;
+    display: block;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+.sidekick-code-copy-btn {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    background: var(--background-modifier-hover);
+    border: 1px solid var(--background-modifier-border);
+    border-radius: 4px;
+    padding: 2px 6px;
+    font-size: 0.7rem;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.15s;
+    z-index: 1;
+}
+
+.sidekick-message-content pre:hover .sidekick-code-copy-btn {
+    opacity: 1;
+}
+
+.sidekick-code-lang {
+    position: absolute;
+    top: 4px;
+    left: 8px;
+    font-size: 0.65rem;
+    color: var(--text-faint);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    pointer-events: none;
+}
+
+.sidekick-message-content code {
+    background: var(--code-background);
+    padding: 2px 4px;
+    border-radius: 3px;
+    font-size: 0.9em;
+    color: var(--code-normal);
+}
+
+.sidekick-message-content blockquote {
+    border-left: 3px solid var(--interactive-accent);
+    padding-left: 10px;
+    margin: 4px 0;
+    color: var(--text-muted);
+    line-height: var(--line-height-tight);
+}
+
+.sidekick-message-content ul,
+.sidekick-message-content ol {
+    padding-left: 20px;
+    margin: 6px 0;
+}
+
+.sidekick-message-content table {
+    margin: 10px 0;
+}
+
+.sidekick-message-content img {
+    max-width: 400px;
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    border: 1px solid var(--background-modifier-border);
+}
+
+/* ── Message footer / actions ────────────────────────────────────── */
+
+.sidekick-message-footer {
+    display: flex;
+    align-items: center;
+    margin-top: 2px;
+    height: 20px;
+    overflow: hidden;
+    opacity: 0.25;
+    transition: opacity 0.15s;
+}
+
+.sidekick-message:hover .sidekick-message-footer {
+    opacity: 1;
+}
+
+.sidekick-message-meta {
+    flex: 1;
+    font-size: 0.75rem;
+    color: var(--text-faint);
+}
+
+.sidekick-message-actions {
+    display: flex;
+    gap: 2px;
+    opacity: 0.4;
+    transition: opacity 0.15s;
+}
+
+.sidekick-msg-cost {
+    font-size: 0.7rem;
+    color: var(--text-faint);
+    margin-left: auto;
+    cursor: default;
+}
+
+.sidekick-message:hover .sidekick-message-actions {
+    opacity: 1;
+}
+
+.sidekick-msg-action-btn {
+    background: none;
+    border: none;
+    padding: 2px;
+    border-radius: 4px;
+    cursor: pointer;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+}
+
+.sidekick-msg-action-btn svg {
+    width: 16px;
+    height: 16px;
+}
+
+.sidekick-msg-action-btn:hover {
+    background: var(--background-modifier-hover);
+    color: var(--text-normal);
+}
+
+.sidekick-msg-action-btn-danger:hover {
+    color: var(--text-error);
+}
+
+.sidekick-rating-active {
+    color: var(--interactive-accent) !important;
+}
+
+/* ── Suggestions ───────────────────────────────────────────────────── */
+
+.sidekick-suggestions {
+    position: relative;
+    background: transparent;
+    border: 1px solid var(--background-modifier-border);
+    border-radius: 6px;
+    margin: 0 12px 4px;
+    max-height: 200px;
+    overflow-y: auto;
+    box-shadow: var(--shadow-s);
+    flex-shrink: 0;
+}
+
+.sidekick-suggestion-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 10px;
+    cursor: pointer;
+    transition: background 0.1s;
+}
+
+.sidekick-suggestion-item:hover {
+    background: var(--background-modifier-hover);
+}
+
+.sidekick-suggestion-item.is-selected {
+    background: var(--background-modifier-hover);
+}
+
+.sidekick-suggestion-name {
+    font-family: var(--font-monospace);
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--interactive-accent);
+}
+
+.sidekick-suggestion-desc {
+    font-size: 11px;
+    color: var(--text-muted);
+}
+
+/* ── Follow-up suggestion chips ──────────────────────────────────── */
+
+.sidekick-followup-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    padding: 4px 12px 6px;
+    flex-shrink: 0;
+    animation: sidekick-fade-in 0.3s ease-out;
+}
+
+.sidekick-followup-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 6px 14px;
+    border-radius: 16px;
+    border: 1px solid var(--background-modifier-border);
+    background: var(--background-primary);
+    font-size: 0.8rem;
+    color: var(--text-normal);
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s, box-shadow 0.15s;
+    max-width: 300px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.sidekick-followup-chip::before {
+    content: '→';
+    color: var(--text-muted);
+    font-size: 0.7rem;
+    flex-shrink: 0;
+}
+
+.sidekick-followup-chip:hover {
+    background: color-mix(in srgb, var(--interactive-accent) 8%, var(--background-primary));
+    border-color: var(--interactive-accent);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+
+/* ── Queued message banner ───────────────────────────────────────── */
+
+.sidekick-queued-banner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 4px 12px;
+    border-radius: 6px;
+    background: var(--background-modifier-hover);
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    animation: sidekick-fade-in 0.2s ease-out;
+    flex-shrink: 0;
+}
+
+.sidekick-queued-label {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    flex: 1;
+    min-width: 0;
+}
+
+.sidekick-queued-cancel {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    padding: 0 4px;
+    font-size: 0.8rem;
+    flex-shrink: 0;
+    margin-left: 8px;
+}
+
+.sidekick-queued-cancel:hover {
+    color: var(--text-error);
+}
+
+/* ── Input wrapper (copilot-style bordered box) ──────────────────── */
+
+.sidekick-input-wrapper {
+    flex-shrink: 0;
+    margin: 0 8px 8px;
+    padding: 8px;
+    border-radius: 6px;
+    border: 1px solid var(--background-modifier-border);
+    background: transparent;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    transition: border-color 0.15s;
+}
+
+.sidekick-input-wrapper:focus-within {
+    border-color: var(--interactive-accent);
+}
+
+/* ── Drag-over state ─────────────────────────────────────────────── */
+.sidekick-drag-over {
+    background: color-mix(in srgb, var(--interactive-accent) 8%, var(--background-primary)) !important;
+    border-color: var(--interactive-accent) !important;
+}
+
+/* ── Attached notes badges ───────────────────────────────────────── */
+
+.sidekick-attached-notes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    padding: 0 4px 4px;
+}
+
+.sidekick-note-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 8px 2px 6px;
+    border-radius: 4px;
+    border: 1px solid var(--background-modifier-border);
+    background: transparent;
+    font-size: 0.75rem;
+    color: var(--text-normal);
+    max-width: 200px;
+    cursor: default;
+}
+
+.sidekick-note-chip:hover {
+    background: var(--background-modifier-hover);
+}
+
+.sidekick-note-chip-name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.sidekick-note-chip-images {
+    font-size: 0.7rem;
+    color: var(--text-faint);
+}
+
+.sidekick-note-chip-remove {
+    cursor: pointer;
+    font-size: 14px;
+    line-height: 1;
+    color: var(--text-muted);
+    margin-left: 2px;
+    display: flex;
+    align-items: center;
+    visibility: hidden;
+}
+
+.sidekick-note-chip:hover .sidekick-note-chip-remove {
+    visibility: visible;
+}
+
+.sidekick-note-chip-remove:hover {
+    color: var(--text-normal);
+}
+
+/* ── Textarea ────────────────────────────────────────────────────── */
+
+.sidekick-input {
+    width: 100%;
+    resize: none;
+    overflow-y: auto;
+    max-height: 150px;
+    font-size: 13px;
+    padding: 4px 6px;
+    border-radius: 4px;
+    border: none;
+    background: transparent;
+    color: var(--text-normal);
+    outline: none;
+    font-family: var(--font-interface);
+    line-height: 1.4;
+}
+
+.sidekick-input::placeholder {
+    color: var(--text-faint);
+}
+
+.sidekick-input:disabled {
+    opacity: 0.5;
+}
+
+/* ── Input footer toolbar ────────────────────────────────────────── */
+
+.sidekick-input-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 24px;
+    padding: 0 2px;
+    gap: 4px;
+}
+
+.sidekick-footer-left {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex: 1;
+    min-width: 0;
+}
+
+/* Textarea wrapper for clear button positioning */
+.sidekick-textarea-wrapper {
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+}
+.sidekick-textarea-wrapper .sidekick-input {
+    flex: 1;
+    padding-right: 28px;
+}
+.sidekick-clear-input-btn {
+    position: absolute;
+    right: 4px;
+    top: 4px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--text-muted);
+    padding: 2px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.6;
+    transition: opacity 0.15s;
+}
+.sidekick-clear-input-btn:hover {
+    opacity: 1;
+    color: var(--text-normal);
+    background: var(--background-modifier-hover);
+}
+.sidekick-clear-input-btn svg {
+    width: 14px;
+    height: 14px;
+}
+
+.sidekick-token-count {
+    font-size: 0.7rem;
+    color: var(--text-faint);
+    padding: 0 4px;
+    white-space: nowrap;
+}
+.sidekick-token-warning {
+    color: var(--text-error);
+    font-weight: 600;
+}
+
+.sidekick-footer-right {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    flex-shrink: 0;
+}
+
+.sidekick-model-picker-btn {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    font-size: 0.75rem;
+    padding: 2px 6px;
+    border-radius: 4px;
+    border: 1px solid var(--background-modifier-border);
+    background: transparent;
+    color: var(--text-muted);
+    cursor: pointer;
+    max-width: 280px;
+    transition: all 0.15s;
+}
+
+.sidekick-model-picker-btn:hover {
+    color: var(--text-accent);
+    border-color: var(--interactive-accent);
+}
+
+.sidekick-model-picker-label {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.sidekick-model-picker-chevron {
+    display: flex;
+    opacity: 0.6;
+}
+
+.sidekick-model-picker-chevron svg {
+    width: 12px;
+    height: 12px;
+}
+
+.sidekick-model-picker-caps {
+    font-size: 0.6rem;
+    opacity: 0.7;
+    margin-left: 3px;
+    letter-spacing: 1px;
+    flex-shrink: 0;
+}
+
+/* ── Model Picker Overlay (dropdown mode) ────────────────────────── */
+.sidekick-model-picker-overlay {
+    position: absolute;
+    left: 8px;
+    right: 8px;
+    bottom: 60px;
+    z-index: 100;
+    max-height: 420px;
+    background: var(--background-primary);
+    border: 1px solid var(--background-modifier-border);
+    border-radius: 8px;
+    box-shadow: var(--shadow-s);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.sidekick-mp-panel {
+    display: flex;
+    flex-direction: column;
+    max-height: 420px;
+    overflow: hidden;
+}
+
+.sidekick-mp-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 10px;
+    border-bottom: 1px solid var(--background-modifier-border);
+}
+
+.sidekick-mp-tabs {
+    display: flex;
+    gap: 4px;
+}
+
+.sidekick-mp-tab {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.8rem;
+    padding: 4px 10px;
+    border: 1px solid var(--background-modifier-border);
+    border-radius: 6px;
+    background: transparent;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all 0.15s;
+}
+
+.sidekick-mp-tab-icon {
+    display: inline-flex;
+    align-items: center;
+}
+
+.sidekick-mp-tab-icon svg {
+    width: 14px;
+    height: 14px;
+}
+
+.sidekick-mp-tab:hover {
+    color: var(--text-normal);
+    background: var(--background-modifier-hover);
+}
+
+.sidekick-container .sidekick-mp-tab.sidekick-mp-tab-active {
+    background: var(--interactive-accent);
+    color: var(--text-on-accent);
+    border-color: var(--interactive-accent);
+}
+
+.sidekick-mp-close {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--text-muted);
+    padding: 4px;
+    border-radius: 4px;
+}
+
+.sidekick-mp-close:hover {
+    color: var(--text-normal);
+    background: var(--background-modifier-hover);
+}
+
+.sidekick-mp-close svg {
+    width: 16px;
+    height: 16px;
+}
+
+.sidekick-mp-search {
+    margin: 8px 10px;
+    padding: 6px 10px;
+    border: 1px solid var(--background-modifier-border);
+    border-radius: 6px;
+    background: transparent;
+    color: var(--text-normal);
+    font-size: 0.85rem;
+    outline: none;
+}
+
+.sidekick-mp-search:focus {
+    border-color: var(--interactive-accent);
+}
+
+.sidekick-mp-filters {
+    display: flex;
+    gap: 4px;
+    padding: 0 10px 6px;
+    flex-wrap: wrap;
+}
+
+.sidekick-mp-filter-btn {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    font-size: 0.72rem;
+    padding: 2px 8px;
+    border-radius: 12px;
+    border: 1px solid var(--background-modifier-border);
+    background: transparent;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all 0.15s;
+    white-space: nowrap;
+}
+
+.sidekick-mp-filter-btn:hover {
+    background: var(--background-modifier-hover);
+    color: var(--text-normal);
+}
+
+.sidekick-container .sidekick-mp-filter-btn.sidekick-mp-filter-active {
+    background: var(--interactive-accent);
+    color: var(--text-on-accent);
+    border-color: var(--interactive-accent);
+}
+
+.sidekick-container .sidekick-mp-filter-btn.sidekick-mp-filter-active:hover {
+    background: var(--interactive-accent-hover);
+}
+
+.sidekick-mp-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0 6px;
+}
+
+.sidekick-mp-loading,
+.sidekick-mp-empty {
+    text-align: center;
+    padding: 20px;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+}
+
+.sidekick-mp-section {
+    margin-bottom: 2px;
+}
+
+.sidekick-mp-section-header {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 8px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    cursor: pointer;
+    border-radius: 4px;
+    user-select: none;
+}
+
+.sidekick-mp-section-header:hover {
+    background: var(--background-modifier-hover);
+}
+
+.sidekick-mp-section-chevron {
+    display: flex;
+}
+
+.sidekick-mp-section-chevron svg {
+    width: 14px;
+    height: 14px;
+}
+
+.sidekick-mp-section-count {
+    font-weight: 400;
+    color: var(--text-faint);
+    font-size: 0.72rem;
+}
+
+.sidekick-mp-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 8px 5px 20px;
+    cursor: pointer;
+    border-radius: 4px;
+    gap: 8px;
+    transition: background 0.1s;
+}
+
+.sidekick-mp-row:hover {
+    background: var(--background-modifier-hover);
+}
+
+.sidekick-mp-row-selected {
+    background: var(--background-modifier-hover);
+}
+
+.sidekick-mp-row-highlight {
+    background: var(--background-modifier-hover);
+    outline: 2px solid var(--interactive-accent);
+    outline-offset: -2px;
+}
+
+.sidekick-mp-row-left {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    min-width: 0;
+}
+
+.sidekick-mp-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: transparent;
+    border: 1.5px solid var(--text-faint);
+    flex-shrink: 0;
+}
+
+.sidekick-mp-dot-active {
+    background: var(--interactive-accent);
+    border-color: var(--interactive-accent);
+}
+
+.sidekick-mp-name {
+    font-size: 0.82rem;
+    color: var(--text-normal);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.sidekick-mp-id {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    margin-left: 6px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    opacity: 0.7;
+}
+
+.sidekick-mp-row-right {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex-shrink: 0;
+}
+
+.sidekick-mp-badge {
+    font-size: 0.72rem;
+    cursor: default;
+}
+
+.sidekick-mp-badge-hidden {
+    visibility: hidden;
+}
+
+/* Fixed-width container for capability emoji columns */
+.sidekick-mp-caps {
+    display: inline-flex;
+    gap: 2px;
+}
+
+/* Fixed-width multiplier/included badge for column alignment */
+.sidekick-mp-multiplier {
+    display: inline-block;
+    min-width: 46px;
+    text-align: right;
+    font-size: 0.68rem;
+}
+
+.sidekick-mp-ctx {
+    font-size: 0.68rem;
+    padding: 1px 4px;
+    border-radius: 3px;
+    background: var(--background-modifier-hover);
+    color: var(--text-muted);
+    font-family: var(--font-monospace);
+    white-space: nowrap;
+    display: inline-block;
+    min-width: 36px;
+    text-align: right;
+}
+
+.sidekick-mp-price {
+    font-size: 0.68rem;
+    padding: 1px 4px;
+    border-radius: 3px;
+    background: var(--background-modifier-hover);
+    color: var(--text-muted);
+    font-family: var(--font-monospace);
+    white-space: nowrap;
+    display: none;
+    min-width: 95px;
+    text-align: right;
+}
+
+/* Placeholder badges when data is absent — invisible but reserves column space */
+.sidekick-mp-ctx-placeholder,
+.sidekick-mp-price-placeholder {
+    display: none;
+}
+
+.sidekick-mp-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 10px;
+    border-top: 1px solid var(--background-modifier-border);
+}
+
+.sidekick-mp-count {
+    font-size: 0.72rem;
+    color: var(--text-faint);
+}
+
+.sidekick-mp-refresh {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    font-size: 0.72rem;
+    padding: 3px 8px;
+    border-radius: 4px;
+    border: 1px solid var(--background-modifier-border);
+    background: transparent;
+    color: var(--text-muted);
+    cursor: pointer;
+}
+
+.sidekick-mp-refresh:hover {
+    color: var(--text-accent);
+    border-color: var(--interactive-accent);
+}
+
+.sidekick-mp-refresh svg {
+    width: 12px;
+    height: 12px;
+}
+
+/* Loading indicator */
+.sidekick-loading-indicator {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 0 4px;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.sidekick-spinner {
+    display: flex;
+    align-items: center;
+}
+
+.sidekick-spinner svg {
+    width: 12px;
+    height: 12px;
+    animation: sidekick-spin 1s linear infinite;
+}
+
+.sidekick-loading-text {
+    white-space: nowrap;
+}
+
+@keyframes sidekick-spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* ── Toolbar icon buttons ────────────────────────────────────────── */
+
+.sidekick-container .sidekick-tool-btn {
+    background: none;
+    border: 1px solid transparent;
+    padding: 2px 4px;
+    border-radius: 4px;
+    cursor: pointer;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    transition: all 0.15s ease;
+    gap: 3px;
+    font-size: 0.7rem;
+}
+
+.sidekick-container .sidekick-tool-btn svg {
+    width: 12px;
+    height: 12px;
+}
+
+.sidekick-container .sidekick-tool-btn:hover {
+    color: var(--text-normal);
+    background: var(--background-modifier-hover);
+}
+
+.sidekick-container .sidekick-tool-btn.sidekick-tool-btn-active {
+    color: var(--text-on-accent);
+    background: var(--interactive-accent);
+    border-color: var(--interactive-accent);
+}
+
+.sidekick-container .sidekick-tool-btn.sidekick-tool-btn-active:hover {
+    color: var(--text-on-accent);
+    background: var(--interactive-accent-hover);
+    border-color: var(--interactive-accent-hover);
+}
+
+/* Submit button */
+.sidekick-submit-btn {
+    background: none;
+    border: none;
+    padding: 2px 4px;
+    border-radius: 4px;
+    cursor: pointer;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    font-size: 0.75rem;
+    transition: color 0.15s;
+}
+
+.sidekick-submit-btn svg {
+    width: 12px;
+    height: 12px;
+}
+
+.sidekick-submit-btn:hover {
+    color: var(--text-accent);
+}
+
+/* Stop button */
+.sidekick-stop-btn {
+    background: none;
+    border: none;
+    padding: 2px;
+    border-radius: 4px;
+    cursor: pointer;
+    color: var(--text-error);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.75rem;
+    transition: color 0.15s;
+}
+
+.sidekick-stop-btn svg {
+    width: 16px;
+    height: 16px;
+}
+
+.sidekick-stop-btn:hover {
+    color: var(--text-error);
+    background: var(--background-modifier-hover);
+}
+
+/* ── Edit mode ───────────────────────────────────────────────────── */
+
+.sidekick-edit-textarea {
+    width: 100%;
+    min-height: 60px;
+    resize: vertical;
+    font-size: 13px;
+    padding: 8px;
+    border-radius: 6px;
+    border: 1px solid var(--interactive-accent);
+    background: transparent;
+    color: var(--text-normal);
+    font-family: var(--font-interface);
+    line-height: 1.4;
+    outline: none;
+}
+
+.sidekick-edit-save-btn {
+    padding: 3px 10px;
+    font-size: 11px;
+    font-weight: 600;
+    border-radius: 6px;
+    border: none;
+    background: var(--interactive-accent);
+    color: var(--text-on-accent);
+    cursor: pointer;
+}
+
+.sidekick-edit-save-btn:hover {
+    filter: brightness(1.1);
+}
+
+.sidekick-edit-cancel-btn {
+    padding: 3px 10px;
+    font-size: 11px;
+    border-radius: 6px;
+    border: 1px solid var(--background-modifier-border);
+    background: transparent;
+    color: var(--text-muted);
+    cursor: pointer;
+}
+
+.sidekick-edit-cancel-btn:hover {
+    color: var(--text-normal);
+}
+
+/* ── Misc ────────────────────────────────────────────────────────── */
+
+.sidekick-empty {
+    text-align: center;
+    color: var(--text-faint);
+    padding: 16px;
+    font-size: 12px;
+}
+
+.sidekick-settings .setting-item-description {
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
+.sidekick-settings-hero {
+    border: 1px solid var(--background-modifier-border);
+    border-radius: 12px;
+    padding: 12px 14px;
+    margin-bottom: 10px;
+    background:
+        radial-gradient(100% 100% at 100% 0%, color-mix(in srgb, var(--interactive-accent) 14%, transparent) 0%, transparent 60%),
+        var(--background-secondary);
+}
+
+.sidekick-settings-hero h2 {
+    margin: 0;
+    font-size: 1.05rem;
+}
+
+.sidekick-settings-hero-sub {
+    margin: 6px 0 0;
+    color: var(--text-muted);
+    font-size: 0.82rem;
+}
+
+.sidekick-error {
+    color: var(--text-error);
+    font-size: 12px;
+    margin: 4px 0;
+}
+
+/* ── Settings version badge ──────────────────────────────────────── */
+.sidekick-settings-version {
+    font-size: 11px;
+    color: var(--text-muted);
+    text-align: right;
+    margin-bottom: 4px;
+}
+
+/* ── Settings tab bar ────────────────────────────────────────────── */
+.sidekick-settings-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    padding: 0 0 12px;
+    margin-bottom: 12px;
+    border-bottom: 1px solid var(--background-modifier-border);
+}
+
+.sidekick-settings-tab {
+    padding: 6px 12px;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    background: transparent;
+    color: var(--text-muted);
+    cursor: pointer;
+    font-size: 13px;
+    font-family: var(--font-interface);
+    transition: background 120ms ease, color 120ms ease;
+}
+
+.sidekick-settings-tab:hover {
+    background: var(--background-modifier-hover);
+    color: var(--text-normal);
+}
+
+.sidekick-settings-tab.is-active {
+    background: var(--interactive-accent);
+    color: var(--text-on-accent);
+    border-color: var(--interactive-accent);
+}
+
+.sidekick-settings-content {
+    padding: 0;
+}
+
+.sidekick-settings-content .setting-item {
+    border: 1px solid var(--background-modifier-border-hover);
+    border-radius: 10px;
+    padding: 8px 10px;
+    margin: 8px 0;
+    background: color-mix(in srgb, var(--background-primary) 82%, var(--background-secondary));
+}
+
+.sidekick-settings-content .setting-item:hover {
+    border-color: color-mix(in srgb, var(--interactive-accent) 28%, var(--background-modifier-border-hover));
+}
+
+.sidekick-settings-content h2 {
+    margin-top: 14px;
+    margin-bottom: 8px;
+    font-size: 1rem;
+}
+
+.sidekick-settings-content h3 {
+    margin-top: 12px;
+    color: var(--text-muted);
+    font-size: 14px;
+}
+
+@media (max-width: 760px) {
+    .sidekick-starter-grid {
+        grid-template-columns: 1fr;
+        max-width: 100%;
+    }
+
+    .sidekick-shortcut-hints {
+        flex-wrap: wrap;
+        justify-content: center;
+        row-gap: 8px;
+    }
+}
+
+/* ── Image gen presets ───────────────────────────────────────────── */
+.sidekick-img-presets {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-top: 6px;
+    width: 100%;
+}
+
+.sidekick-img-preset-btn {
+    font-size: 0.75rem;
+    padding: 2px 8px;
+    border: 1px solid var(--background-modifier-border);
+    border-radius: 4px;
+    background: transparent;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all 0.15s;
+}
+
+.sidekick-img-preset-btn:hover {
+    color: var(--text-normal);
+    background: var(--background-modifier-hover);
+}
+
+.sidekick-img-preset-btn.sidekick-img-preset-active {
+    background: var(--interactive-accent);
+    color: var(--text-on-accent);
+    border-color: var(--interactive-accent);
+}
+
+
+/* ── Retry button in error banner ────────────────────────────────── */
+.sidekick-retry-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    background: var(--interactive-normal);
+    border: 1px solid var(--background-modifier-border);
+    color: var(--text-normal);
+    border-radius: 6px;
+    padding: 4px 10px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 500;
+    white-space: nowrap;
+    transition: all 0.15s ease;
+    flex-shrink: 0;
+    box-shadow: var(--shadow-s);
+}
+
+.sidekick-retry-btn:hover {
+    background: var(--interactive-hover);
+    color: var(--text-normal);
+    border-color: var(--background-modifier-border-hover);
+}
+
+/* ── Divider for Tooltips ────────────────────────────────────────── */
+.sidekick-ctx-tooltip-divider {
+    height: 1px;
+    background: var(--background-modifier-border);
+    margin: 6px 0;
+}
+
+/* ── Context breakdown bar ───────────────────────────────────────── */
+.sidekick-context-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0 4px;
+    position: relative;
+    cursor: default;
+}
+
+/* The fixed-width track holding the fill */
+.sidekick-context-track {
+    width: 60px;
+    height: 6px;
+    border-radius: 3px;
+    background: var(--background-modifier-border);
+    overflow: hidden;
+    position: relative;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.sidekick-context-fill {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 0.3s ease, background 0.3s ease;
+    width: 0%;
+}
+
+.sidekick-context-fill.sidekick-ctx-green {
+    background: linear-gradient(90deg, #22c55e, #4ade80);
+}
+
+.sidekick-context-fill.sidekick-ctx-yellow {
+    background: linear-gradient(90deg, #eab308, #facc15);
+}
+
+.sidekick-context-fill.sidekick-ctx-red {
+    background: linear-gradient(90deg, #ef4444, #f87171);
+}
+
+.sidekick-context-label {
+    font-size: 0.65rem;
+    color: var(--text-faint);
+    white-space: nowrap;
+    font-family: var(--font-monospace);
+}
+
+.sidekick-context-tooltip {
+    position: absolute;
+    bottom: 100%;
+    right: 0;
+    margin-bottom: 8px;
+    background: var(--background-secondary-alt);
+    border: 1px solid var(--background-modifier-border);
+    border-radius: 6px;
+    padding: 12px;
+    width: 260px;
+    box-shadow: var(--shadow-l);
+    z-index: 100;
+}
+
+.sidekick-ctx-tooltip-title {
+    font-size: 13px;
+    font-weight: 500;
+    margin-bottom: 4px;
+    color: var(--text-normal);
+}
+
+.sidekick-ctx-tooltip-summary {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+}
+
+.sidekick-ctx-tooltip-bar-container {
+    height: 4px;
+    background: var(--background-modifier-border);
+    border-radius: 2px;
+    margin-bottom: 12px;
+    overflow: hidden;
+}
+
+.sidekick-ctx-tooltip-bar {
+    height: 100%;
+    background: var(--interactive-accent);
+    border-radius: 2px;
+}
+
+.sidekick-ctx-tooltip-section {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-normal);
+    margin-top: 10px;
+    margin-bottom: 4px;
+}
+
+.sidekick-ctx-tooltip-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    padding: 2px 0 2px 12px;
+    color: var(--text-muted);
+}
+
+.sidekick-ctx-tooltip-val {
+    color: var(--text-normal);
+    font-family: var(--font-monospace);
+}
+
+/* ── Pending images (paste/drop thumbnails) ──────────────────────── */
+.sidekick-pending-images {
+    display: flex;
+    gap: 6px;
+    padding: 6px 8px;
+    flex-wrap: wrap;
+}
+
+.sidekick-pending-img {
+    position: relative;
+    width: 48px;
+    height: 48px;
+    border-radius: 6px;
+    overflow: visible;
+    border: 1px solid var(--background-modifier-border);
+}
+
+.sidekick-pending-img img {
+    border-radius: 6px;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.sidekick-pending-img-remove {
+    position: absolute;
+    top: -2px;
+    right: -2px;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--text-error);
+    color: white;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    opacity: 0;
+    transition: opacity 0.15s;
+}
+
+.sidekick-pending-img-remove svg {
+    width: 10px;
+    height: 10px;
+}
+
+.sidekick-pending-img:hover .sidekick-pending-img-remove {
+    opacity: 1;
+}
+
+/* ── User message attached images ────────────────────────────────── */
+.sidekick-msg-images {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-top: 6px;
+}
+
+.sidekick-msg-img-thumb {
+    width: 64px;
+    height: 64px;
+    object-fit: cover;
+    border-radius: 6px;
+    border: 1px solid var(--background-modifier-border);
+    cursor: pointer;
+}
+
+.sidekick-msg-img-thumb:hover {
+    border-color: var(--interactive-accent);
+}
+
+/* ── Long message collapse ───────────────────────────────────────── */
+.sidekick-collapsed {
+    max-height: 120px;
+    overflow: hidden;
+    position: relative;
+}
+
+.sidekick-collapsed::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 40px;
+    background: linear-gradient(transparent, var(--background-primary));
+}
+
+.sidekick-message-user .sidekick-collapsed::after {
+    background: linear-gradient(transparent, var(--background-modifier-hover));
+}
+
+.sidekick-collapse-toggle {
+    font-size: 0.72rem;
+    color: var(--text-accent);
+    cursor: pointer;
+    padding: 2px 0;
+    user-select: none;
+}
+
+.sidekick-collapse-toggle:hover {
+    text-decoration: underline;
+}
+
+/* ── Agent step callouts (tool calls & reasoning) ────────────────── */
+
+/* Fold arrow — small, faint */
+.sidekick-message .callout.is-collapsible .callout-fold {
+    width: 12px;
+    height: 12px;
+    color: var(--text-faint);
+    opacity: 0.5;
+}
+
+/* Done callout (successful tool) — monochromatic */
+.sidekick-message .callout[data-callout="done"] {
+    --callout-color: var(--mono-rgb-100, 180, 180, 180);
+    border-left-color: var(--text-faint);
+}
+
+/* Fail callout (error) — monochromatic */
+.sidekick-message .callout[data-callout="fail"] {
+    --callout-color: var(--mono-rgb-100, 180, 180, 180);
+    border-left-color: var(--text-faint);
+}
+
+/* Thinking callout — monochromatic */
+.sidekick-message .callout[data-callout="abstract"] {
+    --callout-color: var(--mono-rgb-100, 180, 180, 180);
+    border-left-color: var(--text-faint);
+}
+
+.sidekick-message .callout[data-callout="abstract"] .callout-content {
+    font-size: 0.88em;
+    color: var(--text-muted);
+    line-height: 1.55;
+}
+
+/* Warning callout (approval pending) — accent color for attention */
+.sidekick-message .callout[data-callout="warning"] {
+    --callout-color: var(--mono-rgb-100, 180, 180, 180);
+    border-left-color: var(--text-accent);
+}
+
+/* Running callout (in-progress tool) — monochromatic */
+.sidekick-message .callout[data-callout="example"] {
+    --callout-color: var(--mono-rgb-100, 180, 180, 180);
+    border-left-color: var(--text-faint);
+}
+
+.sidekick-message .callout[data-callout="example"] .callout-title-inner {
+    animation: sidekick-pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes sidekick-pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+/* ── Timeline / checkpoint line for agent steps ──────────────────── */
+
+/* Only show timeline when assistant message has callouts (tool calls/thinking) */
+.sidekick-message-assistant .sidekick-message-content:has(.callout) {
+    position: relative;
+    padding-left: 24px;
+}
+
+/* Vertical connecting line — clipped to callout range by JS (--tl-top / --tl-bottom) */
+.sidekick-message-assistant .sidekick-message-content:has(.callout)::before {
+    content: '';
+    position: absolute;
+    left: 8px;
+    top: var(--tl-top, 0px);
+    bottom: var(--tl-bottom, 0px);
+    width: 2px;
+    background: var(--background-modifier-border);
+    border-radius: 1px;
+}
+
+/* In timeline context, the vertical line replaces the callout left-border */
+.sidekick-message-assistant .sidekick-message-content:has(.callout) .callout {
+    position: relative;
+    border-left-width: 0;
+}
+
+/* ── Timeline dots — color-coded by callout type ───────────────── */
+
+/* Base dot: sits centered on the vertical line, aligned to callout title row */
+.sidekick-message-assistant .sidekick-message-content .callout::after {
+    content: '';
+    position: absolute;
+    left: -20px;
+    top: 11px;
+    transform: translateY(-50%);
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--text-faint);
+    border: 2px solid var(--background-primary);
+    box-sizing: border-box;
+    z-index: 1;
+    pointer-events: none;
+}
+
+/* Running tool call — pulsing accent dot */
+.sidekick-message-assistant .sidekick-message-content .callout[data-callout="example"]::after {
+    background: var(--text-accent);
+    animation: sidekick-dot-pulse 1.5s ease-in-out infinite;
+}
+
+/* Completed tool call — muted, theme-aware */
+.sidekick-message-assistant .sidekick-message-content .callout[data-callout="done"]::after {
+    background: var(--text-muted);
+}
+
+/* Failed tool call — theme-aware error */
+.sidekick-message-assistant .sidekick-message-content .callout[data-callout="fail"]::after {
+    background: var(--text-error, var(--text-muted));
+}
+
+/* Awaiting approval — attention-drawing, theme-aware */
+.sidekick-message-assistant .sidekick-message-content .callout[data-callout="warning"]::after {
+    background: var(--text-warning, var(--text-accent));
+    animation: sidekick-dot-pulse 1.5s ease-in-out infinite;
+}
+
+/* Thinking/reasoning — soft muted */
+.sidekick-message-assistant .sidekick-message-content .callout[data-callout="abstract"]::after {
+    background: var(--text-faint);
+    opacity: 0.6;
+}
+
+@keyframes sidekick-dot-pulse {
+    0%, 100% { transform: translateY(-50%) scale(1); opacity: 1; }
+    50%      { transform: translateY(-50%) scale(1.4); opacity: 0.6; }
+}
+
+/* ── Scrollbar ───────────────────────────────────────────────────── */
+
+.sidekick-messages::-webkit-scrollbar {
+    width: 6px;
+}
+
+.sidekick-messages::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.sidekick-messages::-webkit-scrollbar-thumb {
+    background: var(--background-modifier-border);
+    border-radius: 3px;
+}
+
+.sidekick-messages::-webkit-scrollbar-thumb:hover {
+    background: var(--background-modifier-border-hover);
+}
+
+/* ── Auto-completion ghost text ─────────────────────────────────── */
+
+.sidekick-ghost-text {
+    color: var(--text-faint);
+    opacity: 0.6;
+    font-style: italic;
+    pointer-events: none;
+    user-select: none;
+    white-space: pre-wrap;
+    display: inline !important;
+    animation: sidekick-ghost-fade-in 150ms ease-out;
+}
+
+/* Ensure ghost text is visible at line ends (headings, etc.) */
+.cm-line:has(.sidekick-ghost-text) {
+    overflow: visible !important;
+}
+
+@keyframes sidekick-ghost-fade-in {
+    from { opacity: 0; }
+    to { opacity: 0.6; }
+}
+
+.sidekick-ghost-text-block {
+    display: block;
+    white-space: pre;
+}
+
+/* ── Usage Notice (Copilot quota + session) ──────────────────────── */
+
+/* Quota bar — mirrors context bar layout */
+.sidekick-quota-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0 4px;
+    position: relative;
+    cursor: default;
+}
+
+/* ── Embedding Index Progress Bar ────────────────────────────────── */
+
+.sidekick-embedding-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 2px 4px;
+}
+
+.sidekick-embedding-bar .sidekick-context-label {
+    font-size: 0.75em;
+    color: var(--text-muted);
+    white-space: nowrap;
+}
+
+.sidekick-embedding-fill {
+    background: var(--text-accent) !important;
+    transition: width 0.3s ease;
+}
+
+/* ── Embedding Settings Status ───────────────────────────────────── */
+
+.sidekick-embedding-status p {
+    margin: 4px 0;
+    font-size: 0.9em;
+}
+
+/* ── Usage Report Modal ──────────────────────────────────────────── */
+
+.sidekick-usage-report {
+    max-width: 600px;
+}
+
+.sidekick-usage-report h2 {
+    margin-bottom: 12px;
+}
+
+.sidekick-usage-summary {
+    display: flex;
+    gap: 24px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--background-modifier-border);
+    margin-bottom: 16px;
+}
+
+.sidekick-usage-stat {
+    text-align: center;
+}
+
+.sidekick-usage-stat-value {
+    font-size: 1.3em;
+    font-weight: 600;
+    color: var(--text-accent);
+}
+
+.sidekick-usage-stat-label {
+    font-size: 0.8em;
+    color: var(--text-muted);
+}
+
+.sidekick-usage-empty {
+    color: var(--text-muted);
+    font-style: italic;
+}
+
+.sidekick-usage-card {
+    padding: 12px 0;
+    border-bottom: 1px solid var(--background-modifier-border);
+}
+
+.sidekick-usage-card:last-child {
+    border-bottom: none;
+}
+
+.sidekick-usage-card h3 {
+    margin: 0 0 8px 0;
+}
+
+.sidekick-usage-grid {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 4px 16px;
+}
+
+.sidekick-usage-grid-label {
+    color: var(--text-muted);
+    font-size: 0.9em;
+}
+
+.sidekick-usage-grid-value {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+}
+
+.sidekick-usage-models {
+    margin-top: 8px;
+}
+
+.sidekick-usage-models summary {
+    cursor: pointer;
+    color: var(--text-muted);
+    font-size: 0.85em;
+}
+
+.sidekick-usage-models table {
+    width: 100%;
+    margin-top: 6px;
+    font-size: 0.85em;
+    border-collapse: collapse;
+}
+
+.sidekick-usage-models th {
+    text-align: left;
+    font-weight: 500;
+    padding: 2px 8px 2px 0;
+    border-bottom: 1px solid var(--background-modifier-border);
+    color: var(--text-muted);
+}
+
+.sidekick-usage-models td {
+    padding: 2px 8px 2px 0;
+}
+
+.sidekick-usage-model-name {
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* ── Quick Actions popup ─────────────────────────────────────────── */
+
+.sidekick-quick-action-popup {
+    position: fixed;
+    z-index: 10000;
+    background: var(--background-primary);
+    border: 1px solid var(--background-modifier-border);
+    border-radius: 8px;
+    padding: 12px;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.2);
+    max-height: 400px;
+    min-width: 200px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    font-family: var(--font-interface);
+}
+
+.sidekick-quick-action-popup.sidekick-qa-loading {
+    color: var(--text-muted);
+    font-style: italic;
+    padding: 16px 20px;
+}
+
+.sidekick-qa-result {
+    white-space: pre-wrap;
+    overflow-y: auto;
+    max-height: 320px;
+    line-height: 1.5;
+    font-size: var(--font-text-size);
+    color: var(--text-normal);
+}
+
+.sidekick-qa-buttons {
+    display: flex;
+    gap: 6px;
+    justify-content: flex-end;
+    flex-shrink: 0;
+    border-top: 1px solid var(--background-modifier-border);
+    padding-top: 8px;
+}
+
+.sidekick-qa-btn {
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 12px;
+    cursor: pointer;
+    border: 1px solid var(--background-modifier-border) !important;
+    background: var(--background-secondary) !important;
+    color: var(--text-normal);
+}
+
+.sidekick-qa-btn:hover {
+    background: var(--background-modifier-hover) !important;
+}
+
+.sidekick-qa-btn-primary {
+    background: var(--interactive-accent) !important;
+    color: var(--text-on-accent) !important;
+    border-color: var(--interactive-accent) !important;
+}
+
+.sidekick-qa-btn-primary:hover {
+    filter: brightness(1.1);
+}
+
+.sidekick-qa-btn-dismiss {
+    border: none !important;
+    background: transparent !important;
+    color: var(--text-muted);
+    font-size: 14px;
+    padding: 4px 6px;
+}
+
+/* ── Accessibility: Focus visible ────────────────────────────────── */
+
+.sidekick-container button:focus-visible,
+.sidekick-container textarea:focus-visible,
+.sidekick-container input:focus-visible,
+.sidekick-container [tabindex]:focus-visible,
+.sidekick-conv-item:focus-visible,
+.sidekick-followup-chip:focus-visible,
+.sidekick-starter-card:focus-visible,
+.sidekick-mp-model-row:focus-visible {
+    outline: 2px solid var(--interactive-accent);
+    outline-offset: 1px;
+    border-radius: 4px;
+}
+
+/* ── Accessibility: Reduced motion ───────────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+    .sidekick-container,
+    .sidekick-container * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+/* ── Responsive: Mobile / narrow sidebar ─────────────────────────── */
+
+@media (max-width: 480px) {
+    .sidekick-model-picker-overlay {
+        max-width: 90vw;
+        left: 5vw;
+        right: 5vw;
+    }
+
+    .sidekick-model-picker-btn {
+        max-width: 160px;
+    }
+
+    .sidekick-starter-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .sidekick-input {
+        max-height: 100px;
+    }
+
+    .sidekick-ctrl-btn {
+        min-width: 28px;
+        min-height: 28px;
+    }
+}
+
+/* ── Smooth micro-interactions ───────────────────────────────────── */
+
+.sidekick-ctrl-btn,
+.sidekick-tool-btn,
+.sidekick-approve-btn,
+.sidekick-decline-btn,
+.sidekick-followup-chip,
+.sidekick-starter-card {
+    transition: background 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease, transform 0.1s ease;
+}
+
+.sidekick-submit-btn:active,
+.sidekick-approve-btn:active,
+.sidekick-decline-btn:active,
+.sidekick-starter-card:active {
+    transform: scale(0.97);
+}
+
+/* Model picker slide-up animation */
+.sidekick-model-picker-overlay {
+    animation: sidekick-slide-up 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes sidekick-slide-up {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Missing hover/focus states ──────────────────────────────────── */
+
+.sidekick-convlist-search:hover {
+    border-color: color-mix(in srgb, var(--interactive-accent) 40%, var(--background-modifier-border));
+}
+
+.sidekick-stop-btn:focus-visible {
+    outline: 2px solid var(--text-error);
+    outline-offset: 2px;
+}
+
+.sidekick-convlist-select:focus-visible,
+.sidekick-convlist-dir-btn:focus-visible,
+.sidekick-model-picker-btn:focus-visible {
+    outline: 2px solid var(--interactive-accent);
+    outline-offset: 1px;
+}
+
+/* ── Pinned conversation cards in home view ──────────────────────── */
+
+.sidekick-pinned-label {
+    margin-top: 16px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--text-muted);
+}
+
+.sidekick-pinned-card {
+    border: 1px dashed var(--background-modifier-border);
+    background: var(--background-primary);
+}
+
+.sidekick-pinned-card:hover {
+    border-style: solid;
+    border-color: var(--interactive-accent);
+    background: color-mix(in srgb, var(--interactive-accent) 6%, var(--background-primary));
+}
+
+.sidekick-recent-meta {
+    color: var(--text-faint);
+    font-size: 0.7rem;
+}
+
+/* ── Time divider between messages ──────────────────────────────── */
+
+.sidekick-time-divider {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 12px 0;
+    color: var(--text-faint);
+    font-size: 0.7rem;
+}
+.sidekick-time-divider::before,
+.sidekick-time-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--background-modifier-border);
+}
+
+/* ── Message timestamp on hover ──────────────────────────────────── */
+
+.sidekick-message-timestamp {
+    font-size: 0.65rem;
+    color: var(--text-faint);
+    opacity: 0;
+    transition: opacity 0.15s ease;
+    margin-left: auto;
+    white-space: nowrap;
+}
+
+.sidekick-message:hover .sidekick-message-timestamp {
+    opacity: 1;
+}
+
+.sidekick-message-wordcount {
+    font-size: 0.65rem;
+    color: var(--text-faint);
+    opacity: 0;
+    transition: opacity 0.15s ease;
+    white-space: nowrap;
+}
+.sidekick-message:hover .sidekick-message-wordcount {
+    opacity: 1;
+}
+.sidekick-message-cost {
+    font-size: 0.65rem;
+    color: var(--text-faint);
+    opacity: 0;
+    transition: opacity 0.15s ease;
+    white-space: nowrap;
+    cursor: help;
+}
+.sidekick-message:hover .sidekick-message-cost {
+    opacity: 1;
+}
+
+/* ── Copy button feedback ────────────────────────────────────────── */
+
+.sidekick-copy-toast {
+    position: fixed;
+    bottom: 16px;
+    right: 16px;
+    padding: 6px 14px;
+    background: var(--background-modifier-success);
+    color: var(--text-on-accent);
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    pointer-events: none;
+    z-index: 1000;
+    animation: sidekick-toast-in 0.2s ease-out, sidekick-toast-out 0.3s ease-in 1.5s forwards;
+}
+
+@keyframes sidekick-toast-in {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes sidekick-toast-out {
+    from { opacity: 1; }
+    to   { opacity: 0; transform: translateY(-4px); }
+}
+
+/* ── Undo-delete toast ─────────────────────────────────────────── */
+.sidekick-undo-toast {
+    position: fixed;
+    bottom: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 16px;
+    background: var(--background-secondary);
+    border: 1px solid var(--background-modifier-border);
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    font-size: 0.8rem;
+    z-index: 1000;
+    animation: sidekick-toast-in 0.2s ease-out, sidekick-toast-out 0.3s ease-in 4.5s forwards;
+}
+
+.sidekick-undo-btn {
+    padding: 4px 12px;
+    border: none;
+    border-radius: 4px;
+    background: var(--interactive-accent);
+    color: var(--text-on-accent);
+    font-size: 0.75rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s;
+}
+
+.sidekick-undo-btn:hover {
+    filter: brightness(1.1);
+}
+
+/* ── Streaming cursor ────────────────────────────────────────────── */
+.sidekick-streaming-cursor {
+    display: inline-block;
+    width: 2px;
+    height: 1em;
+    background: var(--text-normal);
+    margin-left: 1px;
+    vertical-align: text-bottom;
+    animation: sidekick-blink 0.8s step-end infinite;
+}
+
+@keyframes sidekick-blink {
+    0%, 50% { opacity: 1; }
+    51%, 100% { opacity: 0; }
+}
+
+/* ── In-conversation search ──────────────────────────────────────── */
+.sidekick-search-bar {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 6px 8px;
+    background: var(--background-secondary);
+    border-bottom: 1px solid var(--background-modifier-border);
+    flex-shrink: 0;
+}
+
+.sidekick-search-input {
+    flex: 1;
+    border: 1px solid var(--background-modifier-border);
+    border-radius: 4px;
+    padding: 4px 8px;
+    font-size: 0.8rem;
+    background: var(--background-primary);
+    color: var(--text-normal);
+    outline: none;
+}
+
+.sidekick-search-input:focus {
+    border-color: var(--interactive-accent);
+}
+
+.sidekick-search-count {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    white-space: nowrap;
+    min-width: 50px;
+    text-align: center;
+}
+
+.sidekick-search-nav {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    padding: 2px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+}
+
+.sidekick-search-nav:hover {
+    color: var(--text-normal);
+    background: var(--background-modifier-hover);
+}
+
+.sidekick-search-nav svg {
+    width: 14px;
+    height: 14px;
+}
+
+mark.sidekick-search-highlight {
+    background: rgba(255, 213, 79, 0.4);
+    border-radius: 2px;
+    padding: 0 1px;
+}
+
+mark.sidekick-search-active {
+    background: rgba(255, 152, 0, 0.6);
+    outline: 2px solid var(--interactive-accent);
+    outline-offset: 1px;
+}
+
+/* ── Keyboard Shortcuts Overlay ──────────────────────────────────── */
+
+.sidekick-shortcuts-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: sidekick-fade-in 0.15s ease;
+}
+
+.sidekick-shortcuts-card {
+    background: var(--background-primary);
+    border: 1px solid var(--background-modifier-border);
+    border-radius: 10px;
+    padding: 20px 24px;
+    max-width: 380px;
+    width: 90%;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.sidekick-shortcuts-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+}
+
+.sidekick-shortcuts-header h3 {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-normal);
+}
+
+.sidekick-shortcuts-close {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 2px 6px;
+    border-radius: 4px;
+}
+
+.sidekick-shortcuts-close:hover {
+    background: var(--background-modifier-hover);
+    color: var(--text-normal);
+}
+
+.sidekick-shortcuts-grid {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 8px 16px;
+    align-items: center;
+}
+
+.sidekick-shortcut-key {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    justify-self: end;
+}
+
+.sidekick-shortcut-key kbd {
+    display: inline-block;
+    padding: 2px 6px;
+    font-size: 0.75rem;
+    font-family: var(--font-monospace);
+    color: var(--text-muted);
+    background: var(--background-secondary);
+    border: 1px solid var(--background-modifier-border);
+    border-radius: 4px;
+    line-height: 1.4;
+}
+
+.sidekick-shortcut-desc {
+    color: var(--text-normal);
+    font-size: 0.85rem;
+}
+
+/* ── Compact mode ──────────────────────────────────────────────── */
+.sidekick-compact .sidekick-message { margin: 0 4px; padding: 4px 8px; }
+.sidekick-compact .sidekick-message-footer { padding: 2px 0; }
+.sidekick-compact .sidekick-messages { gap: 4px; }
+.sidekick-compact .sidekick-time-divider { margin: 4px 0; }
+.sidekick-compact .sidekick-controls-bar { padding: 4px; gap: 4px; }
+.sidekick-compact .sidekick-footer { padding: 4px 8px; }
+.sidekick-compact .sidekick-input-wrapper { padding: 4px; }
