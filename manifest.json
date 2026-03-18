@@ -1,7 +1,7 @@
 {
   "id": "sidekick",
   "name": "Sidekick",
-  "version": "2.2.13",
+  "version": "1.0.0",
   "minAppVersion": "1.0.0",
   "description": "Multi-provider AI chat assistant with 30 tools, agent presets, user profiling, auto-RAG, and vault integration. Supports OpenAI, OpenRouter, and GitHub Copilot.",
   "author": "anwar3606",
