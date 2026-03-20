@@ -4,7 +4,7 @@
     <strong>AI assistant that lives inside your Obsidian vault</strong>
   </p>
   <p align="center">
-    Chat with 30 tools · 8 agent presets · inline autocomplete · 3 providers
+    Chat with 33 tools · 8 agent presets · inline autocomplete · 3 providers
   </p>
   <p align="center">
     <a href="https://github.com/anwar3606/obsidian-sidekick-ai/releases/latest"><img src="https://img.shields.io/github/v/release/anwar3606/obsidian-sidekick-ai?style=flat-square" alt="Release"></a>
@@ -32,7 +32,7 @@ Sidekick is a multi-provider AI chat assistant for [Obsidian](https://obsidian.m
 
 ## Why Sidekick?
 
-Most AI plugins give you a chatbox and nothing else. Sidekick gives the AI **30 tools** to actually interact with your vault — search, read, create, edit, move, and delete notes; browse files and tags; fetch URLs; generate images; and even search Reddit and Jira. Combined with **agent presets** and **inline autocomplete**, it's less of a chat plugin and more of a co-pilot for your knowledge base.
+Most AI plugins give you a chatbox and nothing else. Sidekick gives the AI **33 tools** to actually interact with your vault — search, read, create, edit, move, and delete notes; browse files and tags; fetch URLs; generate images; and even search Reddit and Jira. Combined with **agent presets** and **inline autocomplete**, it's less of a chat plugin and more of a co-pilot for your knowledge base.
 
 **Your data stays yours.** Sidekick sends messages only to the provider you choose. No telemetry, no analytics, no third-party servers. Conversations are saved as plain markdown files in your vault.
 
@@ -45,7 +45,7 @@ Most AI plugins give you a chatbox and nothing else. Sidekick gives the AI **30 
 - **Custom slash commands** — define your own `/commands` with custom system prompts
 
 ### Tools & Agents
-- **30 built-in tools** — the AI decides what to use based on your request
+- **33 built-in tools** — the AI decides what to use based on your request
 - **8 agent presets** — switch between specialized personas in one click
 - **Sub-agents** — delegate complex multi-step tasks
 - **Tool approval** — risky tools (create/delete/fetch) require your confirmation
@@ -81,7 +81,7 @@ Most AI plugins give you a chatbox and nothing else. Sidekick gives the AI **30 
 
 <details>
 <summary><strong>Tool Calling</strong></summary>
-<p><img src="images/settings-tools.png" width="700" alt="30 built-in tools with individual toggles" /></p>
+<p><img src="images/settings-tools.png" width="700" alt="33 built-in tools with individual toggles" /></p>
 </details>
 
 <details>
@@ -117,9 +117,9 @@ The AI can call these tools autonomously during conversation:
 |----------|-------|
 | **Vault** | `search_vault` · `read_note` · `read_note_section` · `read_note_outline` · `create_note` · `edit_note` · `move_note` · `delete_note` · `open_note` |
 | **Browse** | `list_files` · `grep_search` · `search_by_tag` · `get_recent_notes` · `get_open_notes` · `get_backlinks` · `get_note_metadata` |
-| **Web** | `fetch_url` · `search_reddit` · `read_reddit_post` · `jira_search` · `jira_get_issue` |
+| **Web** | `web_search` · `fetch_url` · `search_reddit` · `read_reddit_post` · `jira_search` · `jira_get_issue` · `jira_create_issue` · `jira_add_comment` · `jira_update_issue` |
 | **Media** | `generate_image` · `view_image` |
-| **AI** | `semantic_search_vault` · `suggest_notes` · `sub_agent` |
+| **AI** | `semantic_search_vault` · `delegate_to_agent` · `spawn_parallel_agents` |
 | **User** | `ask_user` · `ask_user_choice` · `remember_user_fact` |
 
 ## Slash Commands
@@ -130,12 +130,24 @@ The AI can call these tools autonomously during conversation:
 | `/note` | Attach active note as context |
 | `/selection` | Attach selected text as context |
 | `/regen` | Regenerate last response |
+| `/iterate` | Toggle iterate mode |
 | `/clear` | Clear current chat |
 | `/export` | Export chat to a markdown note |
 | `/new` | Start a new conversation |
+| `/rename` | Rename current conversation |
+| `/duplicate` | Duplicate current conversation |
+| `/model` | Open model picker |
+| `/settings` | Open plugin settings |
+| `/usage` | Show Copilot usage quota |
+| `/pin` | Toggle pin on current conversation |
+| `/info` | Show current conversation info |
+| `/stats` | Show vault-wide chat statistics |
+| `/favorites` | Show favorited (thumbs-up) messages |
+| `/search` | Search across all conversations |
+| `/undo` | Remove last user message and response |
+| `/summary` | Show conversation summary (messages, cost, model) |
 | `/agent` | Switch agent preset |
 | `/profile` | Show learned user profile |
-| `/web` | Search the web |
 
 ## Installation
 
