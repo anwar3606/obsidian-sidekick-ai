@@ -18,12 +18,11 @@
   </p>
 </p>
 
-<!-- TODO: Add a hero screenshot or GIF here -->
-<!-- <p align="center"><img src="docs/screenshot.png" width="700" /></p> -->
+<p align="center"><img src="images/chat-demo.gif" width="700" alt="Sidekick chat demo" /></p>
 
 ---
 
-Sidekick is a multi-provider AI chat assistant for [Obsidian](https://obsidian.md). It opens as a sidebar panel and can search your vault, read and create notes, generate images, browse the web, and more — all through natural conversation. It works with **OpenAI**, **OpenRouter**, and **GitHub Copilot** (free tier included).
+Sidekick is a multi-provider AI chat assistant for [Obsidian](https://obsidian.md), primarily inspired by the **VS Code GitHub Copilot Chat** extension. It brings the same powerful chat + tools + inline autocomplete workflow to your Obsidian vault. It opens as a sidebar panel and can search your vault, read and create notes, generate images, browse the web, and more — all through natural conversation. It works with **OpenAI**, **OpenRouter**, and **GitHub Copilot** (free tier included).
 
 ## Quick Start
 
@@ -51,19 +50,49 @@ Most AI plugins give you a chatbox and nothing else. Sidekick gives the AI **30 
 - **Sub-agents** — delegate complex multi-step tasks
 - **Tool approval** — risky tools (create/delete/fetch) require your confirmation
 
+<p><img src="images/settings-tools.png" width="600" alt="Tool calling settings" /></p>
+
 ### Intelligence
 - **User profiling** — learns your preferences over time for better responses
 - **Auto-RAG** — automatically finds relevant notes via embeddings before answering
 - **Smart search** — BM25 + fuzzy matching + graph boost + recency weighting
 
+<p><img src="images/settings-embeddings.png" width="600" alt="Embeddings and vector search" /></p>
+
 ### Writing
 - **Inline autocomplete** — ghost text suggestions as you type (Tab to accept, Escape to dismiss)
 - **Diff view** — see proposed edits before applying them
+
+<p><img src="images/settings-autocomplete.png" width="600" alt="Auto-completion settings" /></p>
 
 ### Providers
 - **OpenAI** — GPT-4o, GPT-4.1, o3, o4, DALL-E, and more
 - **OpenRouter** — 200+ models from Anthropic, Google, Meta, Mistral, DeepSeek, etc.
 - **GitHub Copilot** — works with your existing Copilot subscription (including free tier)
+
+<p><img src="images/settings-providers.png" width="600" alt="Provider and model configuration" /></p>
+
+## Screenshots
+
+<details>
+<summary><strong>Provider & Model Settings</strong></summary>
+<p><img src="images/settings-providers.png" width="700" alt="Provider and model configuration" /></p>
+</details>
+
+<details>
+<summary><strong>Tool Calling</strong></summary>
+<p><img src="images/settings-tools.png" width="700" alt="30 built-in tools with individual toggles" /></p>
+</details>
+
+<details>
+<summary><strong>Inline Auto-Completion</strong></summary>
+<p><img src="images/settings-autocomplete.png" width="700" alt="Auto-completion settings" /></p>
+</details>
+
+<details>
+<summary><strong>Embeddings & Vector Search</strong></summary>
+<p><img src="images/settings-embeddings.png" width="700" alt="Embeddings and vector search configuration" /></p>
+</details>
 
 ## Agent Presets
 
