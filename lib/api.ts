@@ -260,7 +260,7 @@ function toAnthropicTools(settings: ApiSettings): AnthropicTool[] | undefined {
 }
 
 /** Convert an image_url part to Anthropic format (base64 or URL source). */
-function convertImageForAnthropic(url: string): unknown | null {
+function convertImageForAnthropic(url: string): Record<string, unknown> | null {
     if (url.startsWith('data:')) {
         const match = url.match(/^data:([^;]+);base64,(.+)$/);
         if (match) {

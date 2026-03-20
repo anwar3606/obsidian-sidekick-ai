@@ -156,8 +156,8 @@ export function validateParallelAgentsArgs(
         const a = agents[i] as Record<string, unknown>;
         if (!a || typeof a !== 'object') return `Agent ${i}: invalid entry`;
         const err = validateSubAgentArgs(
-            String(a.task || ''),
-            String(a.role || ''),
+            String(a.task ?? ''),
+            String(a.role ?? ''),
         );
         if (err) return `Agent ${i}: ${err}`;
     }

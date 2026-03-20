@@ -171,14 +171,14 @@ export function parseTavilyResponse(raw: unknown): WebSearchResponse {
         if (!r || typeof r !== 'object') continue;
         const item = r as Record<string, unknown>;
         results.push({
-            title: String(item.title || ''),
-            url: String(item.url || ''),
-            content: String(item.content || ''),
+            title: String(item.title ?? ''),
+            url: String(item.url ?? ''),
+            content: String(item.content ?? ''),
             score: typeof item.score === 'number' ? item.score : 0,
         });
     }
     return {
-        query: String(data.query || ''),
+        query: String(data.query ?? ''),
         results,
         answer: typeof data.answer === 'string' ? data.answer : undefined,
     };
@@ -213,9 +213,9 @@ export function parseBraveResponse(raw: unknown): WebSearchResponse {
         if (!r || typeof r !== 'object') continue;
         const item = r as Record<string, unknown>;
         results.push({
-            title: stripHtml(String(item.title || '')),
-            url: String(item.url || ''),
-            content: stripHtml(String(item.description || '')),
+            title: stripHtml(String(item.title ?? '')),
+            url: String(item.url ?? ''),
+            content: stripHtml(String(item.description ?? '')),
             score: 0, // Brave doesn't provide relevance scores
         });
     }
@@ -256,9 +256,9 @@ export function parseGoogleResponse(raw: unknown): WebSearchResponse {
         if (!r || typeof r !== 'object') continue;
         const item = r as Record<string, unknown>;
         results.push({
-            title: stripHtml(String(item.title || '')),
-            url: String(item.link || ''),
-            content: stripHtml(String(item.snippet || '')),
+            title: stripHtml(String(item.title ?? '')),
+            url: String(item.link ?? ''),
+            content: stripHtml(String(item.snippet ?? '')),
             score: 0, // Google doesn't provide relevance scores
         });
     }

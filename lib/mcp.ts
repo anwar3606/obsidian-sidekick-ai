@@ -161,7 +161,7 @@ export function parseToolCallResult(result: unknown): MCPToolCallResult {
         content: content.map((c: unknown) => {
             const item = (c && typeof c === 'object' ? c : {}) as Record<string, unknown>;
             return {
-                type: String(item.type || 'text'),
+                type: String(item.type ?? 'text'),
                 text: typeof item.text === 'string' ? item.text : undefined,
                 data: typeof item.data === 'string' ? item.data : undefined,
                 mimeType: typeof item.mimeType === 'string' ? item.mimeType : undefined,

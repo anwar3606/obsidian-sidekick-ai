@@ -82,7 +82,7 @@ export function parseFollowUpResponse(response: string): FollowUpSuggestion[] {
     // Fallback: split on newlines, strip numbering/bullets
     const lines = dedupe(trimmed
         .split('\n')
-        .map(line => line.replace(/^\d+[.\)]\s*/, '').replace(/^[-•*]\s*/, '').replace(/^["']|["']$/g, '').trim())
+        .map(line => line.replace(/^\d+[.)]\s*/, '').replace(/^[-•*]\s*/, '').replace(/^["']|["']$/g, '').trim())
         .filter(line => line.length > 5 && line.length < 200));
 
     return lines.slice(0, MAX_SUGGESTIONS).map(text => ({

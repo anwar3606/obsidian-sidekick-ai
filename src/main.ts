@@ -25,7 +25,7 @@ export default class SidekickPlugin extends Plugin {
 
     async onload(): Promise<void> {
         await this.loadSettings();
-        console.log(`Sidekick plugin loaded v${this.manifest.version}`);
+        console.debug(`Sidekick plugin loaded v${this.manifest.version}`);
 
         // Initialize debug logger
         debugLog.init(this.app, this.settings.debugLogging ?? false);
@@ -74,14 +74,14 @@ export default class SidekickPlugin extends Plugin {
         // Add command to open chat panel
         this.addCommand({
             id: 'open-chat',
-            name: 'Open Sidekick',
+            name: 'Open chat panel',
             callback: () => this.activateView(),
         });
 
         // Add command to start new conversation
         this.addCommand({
             id: 'new-chat',
-            name: 'New Sidekick conversation',
+            name: 'New conversation',
             callback: async () => {
                 await this.activateView();
                 const view = this.getView();
@@ -92,7 +92,7 @@ export default class SidekickPlugin extends Plugin {
         // Add command to add active note as context
         this.addCommand({
             id: 'add-note-context',
-            name: 'Add active note to Sidekick',
+            name: 'Add active note as context',
             editorCallback: async () => {
                 await this.activateView();
                 const view = this.getView();
@@ -103,7 +103,7 @@ export default class SidekickPlugin extends Plugin {
         // Add command to add selection as context
         this.addCommand({
             id: 'add-selection-context',
-            name: 'Add selection to Sidekick',
+            name: 'Add selection as context',
             editorCallback: async () => {
                 await this.activateView();
                 const view = this.getView();
@@ -115,7 +115,6 @@ export default class SidekickPlugin extends Plugin {
         this.addCommand({
             id: 'switch-model',
             name: 'Switch model',
-            hotkeys: [{ modifiers: ['Ctrl', 'Shift'], key: 'm' }],
             callback: async () => {
                 await this.activateView();
                 const view = this.getView();
@@ -137,7 +136,6 @@ export default class SidekickPlugin extends Plugin {
         this.addCommand({
             id: 'trigger-inline-suggestion',
             name: 'Trigger inline suggestion',
-            hotkeys: [{ modifiers: ['Alt'], key: '\\' }],
             editorCallback: (_editor, view) => {
                 if (!this.settings.autocomplete.enabled) return;
                 // CM6 EditorView accessible via view.editor.cm
@@ -149,8 +147,7 @@ export default class SidekickPlugin extends Plugin {
         // Focus chat input (like VS Code Copilot Chat Ctrl+L)
         this.addCommand({
             id: 'focus-chat',
-            name: 'Focus Sidekick chat input',
-            hotkeys: [{ modifiers: ['Ctrl'], key: 'l' }],
+            name: 'Focus chat input',
             callback: async () => {
                 await this.activateView();
                 const view = this.getView();
@@ -172,7 +169,7 @@ export default class SidekickPlugin extends Plugin {
         // Summarize active note in one step
         this.addCommand({
             id: 'summarize-note',
-            name: 'Summarize active note in Sidekick',
+            name: 'Summarize active note',
             editorCallback: async () => {
                 await this.activateView();
                 const view = this.getView();
@@ -186,7 +183,7 @@ export default class SidekickPlugin extends Plugin {
         // Ask about active note in one step
         this.addCommand({
             id: 'ask-about-note',
-            name: 'Ask Sidekick about active note',
+            name: 'Ask about active note',
             editorCallback: async () => {
                 await this.activateView();
                 const view = this.getView();
@@ -200,7 +197,7 @@ export default class SidekickPlugin extends Plugin {
         // Check for updates via S3
         this.addCommand({
             id: 'check-for-updates',
-            name: 'Check for Updates',
+            name: 'Check for updates',
             callback: () => checkForUpdates(this.app, this, true),
         });
 
@@ -289,7 +286,6 @@ export default class SidekickPlugin extends Plugin {
         this.promptManager?.destroy();
         this.vaultIndexer?.destroy();
         setVaultIndexer(null);
-        this.app.workspace.detachLeavesOfType(SIDEKICK_VIEW_TYPE);
     }
 
     private getView(): ChatView | null {
